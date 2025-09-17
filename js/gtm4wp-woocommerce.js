@@ -30,21 +30,21 @@ function gtm4wp_woocommerce_handle_cart_qty_change() {
 			// does the quantity increase?
 			if ( original_value < current_value ) {
 				// yes => handle add to cart event
-				productdata.quantity = current_value - original_value;
-				productdata.price    = productdata.price;
+				productdata.quantity = Number(current_value - original_value);
+				productdata.price    = Number(productdata.price);
 
 				gtm4wp_push_ecommerce( 'add_to_cart', [ productdata ], {
 					'currency': gtm4wp_currency, // ga4 version
-					'value': productdata.price * productdata.quantity
+					'value': Number( productdata.price * productdata.quantity)
 				});
 			} else {
 				// no => handle remove from cart event
-				productdata.quantity = original_value - current_value;
-				productdata.price    = productdata.price;
+				productdata.quantity = Number(original_value - current_value);
+				productdata.price    = Number(productdata.price);
 
 				gtm4wp_push_ecommerce( 'remove_from_cart', [ productdata ], {
 					'currency': gtm4wp_currency,
-					'value': productdata.price * productdata.quantity
+					'value': Number(productdata.price * productdata.quantity)
 				});
 			}
 		} // end if qty changed
@@ -74,7 +74,7 @@ function gtm4wp_woocommerce_handle_payment_method_change() {
 	gtm4wp_push_ecommerce( 'add_payment_info', window.gtm4wp_checkout_products, {
 		'currency': gtm4wp_currency,
 		'payment_type': payment_type,
-		'value': window.gtm4wp_checkout_value
+		'value': Number(window.gtm4wp_checkout_value)
 	});
 
 	gtm4wp_checkout_step_fired.push( 'payment_method' );
@@ -103,7 +103,7 @@ function gtm4wp_woocommerce_handle_shipping_method_change() {
 	gtm4wp_push_ecommerce( 'add_shipping_info', window.gtm4wp_checkout_products, {
 		'currency': gtm4wp_currency,
 		'shipping_tier': shipping_tier,
-		'value': window.gtm4wp_checkout_value
+		'value': Number(window.gtm4wp_checkout_value)
 	});
 
 	gtm4wp_checkout_step_fired.push( 'shipping_method' );
@@ -237,7 +237,7 @@ function gtm4wp_woocommerce_process_pages() {
 
 			gtm4wp_push_ecommerce( 'add_to_cart', [ productdata ], {
 				'currency': gtm4wp_currency,
-				'value': productdata.price
+				'value': Number(productdata.price)
 			});
 		}
 
@@ -264,7 +264,7 @@ function gtm4wp_woocommerce_process_pages() {
 
 					gtm4wp_push_ecommerce( 'add_to_cart', [ gtm4wp_last_selected_product_variation ], {
 						'currency': gtm4wp_currency,
-						'value': (gtm4wp_last_selected_product_variation.price * gtm4wp_last_selected_product_variation.quantity).toFixed(2)
+						'value': Number((gtm4wp_last_selected_product_variation.price * gtm4wp_last_selected_product_variation.quantity).toFixed(2))
 					});
 				}
 			} else if ( product_is_grouped ) {
@@ -289,7 +289,7 @@ function gtm4wp_woocommerce_process_pages() {
 					if ( 0 == product_qty ) {
 						return true;
 					}
-					productdata.quantity = product_qty;
+					productdata.quantity = Number(product_qty);
 
 					delete productdata.internal_id;
 
@@ -303,7 +303,7 @@ function gtm4wp_woocommerce_process_pages() {
 
 				gtm4wp_push_ecommerce( 'add_to_cart', products, {
 					'currency': gtm4wp_currency,
-					'value': sum_value.toFixed(2)
+					'value': Number(sum_value.toFixed(2))
 				});
 			} else {
 				const product_data_el = product_form.querySelector( '[name=gtm4wp_product_data]' );
@@ -319,7 +319,7 @@ function gtm4wp_woocommerce_process_pages() {
 
 				gtm4wp_push_ecommerce( 'add_to_cart', [ productdata ], {
 					'currency': gtm4wp_currency,
-					'value': productdata.price * productdata.quantity
+					'value': Number(productdata.price * productdata.quantity)
 				});
 			}
 		}
@@ -363,7 +363,7 @@ function gtm4wp_woocommerce_process_pages() {
 
 			gtm4wp_push_ecommerce( 'remove_from_cart', [ productdata ], {
 				'currency': gtm4wp_currency,
-				'value': productdata.price * productdata.quantity
+				'value': Number(productdata.price * productdata.quantity)
 			});
 		}
 
@@ -548,7 +548,7 @@ function gtm4wp_woocommerce_process_pages() {
 		// fire ga4 version
 		gtm4wp_push_ecommerce( 'view_item', [ current_product_detail_data ], {
 			'currency': gtm4wp_currency,
-			'value': current_product_detail_data.price
+			'value': Number(current_product_detail_data.price)
 		});
 
 		if ( document.readyState === "interactive" ) {
