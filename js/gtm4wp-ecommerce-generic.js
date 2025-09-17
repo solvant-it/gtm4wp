@@ -9,7 +9,7 @@ function gtm4wp_make_sure_is_float( probably_float ) {
 	} else if ( typeof will_be_float != "number" ) {
 		will_be_float = 0;
 	}
-	will_be_float = will_be_float.toFixed(2)
+	will_be_float = parseFloat(will_be_float.toFixed(2));
 
 	return will_be_float;
 }

@@ -85,7 +85,7 @@ function gtm4wp_woocommerce_process_product( $product, $additional_product_attri
 		'item_id'                  => $remarketing_id,
 		'item_name'                => $product->get_title(),
 		'sku'                      => $product_sku ? $product_sku : $product_id,
-		'price'                    => round( (float) wc_get_price_to_display( $product ), 2 ), // Unfortunately this does not force a .00 postfix for integers.
+		'price'                    => (float) round( (float) wc_get_price_to_display( $product ), 2 ), // Unfortunately this does not force a .00 postfix for integers.
 		'stocklevel'               => $product->get_stock_quantity(),
 		'stockstatus'              => $product->get_stock_status(),
 		'google_business_vertical' => $gtm4wp_options[ GTM4WP_OPTION_INTEGRATE_WCBUSINESSVERTICAL ],
@@ -188,8 +188,8 @@ function gtm4wp_woocommerce_process_order_items( $order ) {
 			$eec_product_array = gtm4wp_woocommerce_process_product(
 				$product,
 				array(
-					'quantity' => $order_item->get_quantity(),
-					'price'    => $product_price,
+					'quantity' => (int) $order_item->get_quantity(),
+					'price'    => (float) $product_price,
 				),
 				'purchase'
 			);
@@ -461,7 +461,7 @@ function gtm4wp_woocommerce_datalayer_filter_items( $data_layer ) {
 			$eec_product_array = gtm4wp_woocommerce_process_product(
 				$product,
 				array(
-					'quantity' => $cart_item_data['quantity'],
+					'quantity' => (int) $cart_item_data['quantity'],
 				),
 				'cart'
 			);
@@ -502,7 +502,7 @@ function gtm4wp_woocommerce_datalayer_filter_items( $data_layer ) {
 							array(
 								'ecommerce' => array(
 									'currency' => $gtm4wp_currency,
-									'value'    => $eec_product_array['price'],
+									'value'    => (float) $eec_product_array['price'],
 									'items'    => array(
 										$eec_product_array,
 									),
@@ -529,7 +529,7 @@ function gtm4wp_woocommerce_datalayer_filter_items( $data_layer ) {
 						array(
 							'ecommerce' => array(
 								'currency' => $gtm4wp_currency,
-								'value'    => $eec_product_array['price'],
+								'value'    => (float) $eec_product_array['price'],
 								'items'    => array(
 									$eec_product_array,
 								),
@@ -569,7 +569,7 @@ function gtm4wp_woocommerce_datalayer_filter_items( $data_layer ) {
 				$eec_product_array = gtm4wp_woocommerce_process_product(
 					$product,
 					array(
-						'quantity' => $cart_item_data['quantity'],
+						'quantity' => (int) $cart_item_data['quantity'],
 					),
 					'cart'
 				);
@@ -771,7 +771,7 @@ function gtm4wp_woocommerce_datalayer_filter_items( $data_layer ) {
 				$eec_product_array = gtm4wp_woocommerce_process_product(
 					$product,
 					array(
-						'quantity' => $cart_item_data['quantity'],
+						'quantity' => (int) $cart_item_data['quantity'],
 					),
 					'checkout'
 				);
@@ -817,7 +817,7 @@ function gtm4wp_woocommerce_datalayer_filter_items( $data_layer ) {
 				$eec_product_array = gtm4wp_woocommerce_process_product(
 					$product,
 					array(
-						'quantity' => $cart_item['quantity'],
+						'quantity' => (int) $cart_item['quantity'],
 					),
 					'readdedtocart'
 				);
@@ -830,7 +830,7 @@ function gtm4wp_woocommerce_datalayer_filter_items( $data_layer ) {
 					array(
 						'ecommerce' => array(
 							'currency' => $gtm4wp_currency,
-							'value'    => $eec_product_array['price'] * $eec_product_array['quantity'],
+							'value'    => (float) $eec_product_array['price'] * $eec_product_array['quantity'],
 							'items'    => array( $eec_product_array ),
 						),
 					)
@@ -1415,7 +1415,7 @@ function gtm4wp_wc_quick_view_before_single_product() {
 
 				$data_layer['ecommerce'] = array(
 					'currency' => $gtm4wp_currency,
-					'value'    => $eec_product_array['price'],
+					'value'    => (float) $eec_product_array['price'],
 					'item'     => $eec_product_array,
 				);
 		}
