@@ -234,6 +234,7 @@ function gtm4wp_woocommerce_process_pages() {
 			}
 			delete productdata.product_type;
 			productdata.quantity = 1;
+			productdata.price = Number(productdata.price);
 
 			gtm4wp_push_ecommerce( 'add_to_cart', [ productdata ], {
 				'currency': gtm4wp_currency,
@@ -260,7 +261,8 @@ function gtm4wp_woocommerce_process_pages() {
 			if ( product_variant_id.length > 0 ) {
 				if ( gtm4wp_last_selected_product_variation ) {
 					const qty_el = product_form.querySelector( '[name=quantity]' );
-					gtm4wp_last_selected_product_variation.quantity = (qty_el && qty_el.value) || 1;
+					gtm4wp_last_selected_product_variation.quantity = Number((qty_el && qty_el.value) || 1);
+					gtm4wp_last_selected_product_variation.price = Number(gtm4wp_last_selected_product_variation.price);
 
 					gtm4wp_push_ecommerce( 'add_to_cart', [ gtm4wp_last_selected_product_variation ], {
 						'currency': gtm4wp_currency,
@@ -312,10 +314,12 @@ function gtm4wp_woocommerce_process_pages() {
 				}
 
 				let productdata = gtm4wp_read_from_json( product_data_el.value );
-				productdata.quantity = product_form.querySelector( '[name=quantity]' ) && product_form.querySelector( '[name=quantity]' ).value;
+				let qtyVal = product_form.querySelector( '[name=quantity]' ) && product_form.querySelector( '[name=quantity]' ).value;
+				productdata.quantity = Number(qtyVal);
 				if ( isNaN( productdata.quantity ) ) {
 					productdata.quantity = 1;
 				}
+				productdata.price = Number(productdata.price);
 
 				gtm4wp_push_ecommerce( 'add_to_cart', [ productdata ], {
 					'currency': gtm4wp_currency,
