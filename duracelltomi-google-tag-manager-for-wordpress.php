@@ -11,7 +11,7 @@
  * Plugin Name: GTM4WP - A Google Tag Manager (GTM) plugin for WordPress
  * Plugin URI: https://gtm4wp.com/
  * Description: The first Google Tag Manager plugin for WordPress with business goals in mind
- * Version: 1.22.1-solvant-0.1
+ * Version: 1.22.1-solvant-0.2
  * Requires at least: 3.4.0
  * Requires PHP: 7.4
  * Author: Thomas Geiger
@@ -21,11 +21,13 @@
  * Text Domain: duracelltomi-google-tag-manager
  * Domain Path: /languages
 
+ * Update URI: false
+
  * WC requires at least: 5.0
  * WC tested up to: 9.8
  */
 
-define( 'GTM4WP_VERSION', '1.22.1-solvant-0.1' );
+define( 'GTM4WP_VERSION', '1.22.1-solvant-0.2' );
 define( 'GTM4WP_PATH', plugin_dir_path( __FILE__ ) );
 
 global $gtp4wp_plugin_url, $gtp4wp_plugin_basename, $gtp4wp_script_path;
@@ -85,3 +87,40 @@ add_action(
 		}
 	}
 );
+
+// --- Optional: Plugin Update Checker (PUC) integration for GitHub releases ---
+// If you want updates to come from your GitHub repo, add the PUC library under
+// includes/plugin-update-checker/ (see https://github.com/YahnisElsts/plugin-update-checker)
+// and configure the repo URL and branch below.
+if ( ! function_exists( 'gtm4wp_setup_github_updater' ) ) {
+	function gtm4wp_setup_github_updater() {
+		// path to the PUC library
+		$puc_path = GTM4WP_PATH . 'includes/plugin-update-checker/plugin-update-checker.php';
+
+		if ( file_exists( $puc_path ) ) {
+			require_once $puc_path;
+
+			// GitHub repo URL for your fork
+			$repo_url = 'https://github.com/solvant-it/gtm4wp/';
+
+			// Build the update checker object
+			try {
+				$update_checker = Puc_v4_Factory::buildUpdateChecker(
+					$repo_url,
+					__FILE__, // main plugin file
+					'duracelltomi-google-tag-manager-for-wordpress'
+				);
+
+				// track master branch (current repo branch)
+				$update_checker->setBranch('master');
+
+				// If you'd like to use a GitHub token (private repos), call:
+				// $update_checker->setAuthentication('YOUR_GITHUB_TOKEN');
+			} catch ( Exception $e ) {
+				// don't break plugin if updater fails
+			}
+		}
+	}
+	// call on plugins_loaded so constants are available
+	add_action( 'plugins_loaded', 'gtm4wp_setup_github_updater' );
+}
